@@ -65,7 +65,7 @@ export default function ProductForm({ product }) {
             userId: fileID,
             productId: fileID,
           });
-          console.log("database", dbPost);
+          console.log("createListing", dbPost);
           
 
           if (dbPost) {
