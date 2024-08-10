@@ -12,18 +12,19 @@ export class AuthService {
     this.account = new Account(this.client);
   }
 
-  async createAccount({ name, email, password, storeName }) {
+  async createAccount({ name, email, password }) {
     try {
       const userAccount = await this.account.create(
         ID.unique(),
         email,
         password,
-        name,
-        storeName
+        name
       );
 
       if (userAccount) {
-        return this.login({ email, password });
+        console.log("creating user account");
+
+        return await this.login({ email, password });
       } else {
         return userAccount;
       }
@@ -42,10 +43,14 @@ export class AuthService {
 
   async getCurrentUSer() {
     try {
-      return await this.account.get();
+      const user = await this.account.get();
+      console.log("current user", user);
+      return user
+      
     } catch (error) {
       console.log("Appwrite service :: getCurrentUser :: error", error);
     }
+    return null;
   }
 
   async logout() {
