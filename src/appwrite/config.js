@@ -27,13 +27,14 @@ export class Service {
     productId,
   }) {
     try {
+      console.log("creating a listing");
+      
       return await this.databases.createDocument(
         conf.appwriteDatabaseId,
         conf.appwriteCollectionId,
         slug,
         {
           title,
-          slug,
           description,
           image,
           status,
@@ -55,6 +56,8 @@ export class Service {
     { title, description, image, status, price, qty, category }
   ) {
     try {
+      console.log("updating a listing");
+      
       return await this.databases.updateDocument(
         conf.appwriteDatabaseId,
         conf.appwriteCollectionId,
@@ -77,6 +80,8 @@ export class Service {
 
   async deleteListing(slug) {
     try {
+      console.log("deleting a listing");
+      
       await this.databases.deleteDocument(
         conf.appwriteDatabaseId,
         conf.appwriteCollectionId,
@@ -91,6 +96,8 @@ export class Service {
 
   async getListing(slug) {
     try {
+      console.log("getting a listing");
+      
       return await this.databases.getDocument(
         conf.appwriteDatabaseId,
         conf.appwriteCollectionId,
@@ -104,6 +111,8 @@ export class Service {
 
   async getListings(queries = [Query.equal("status", "active")]) {
     try {
+      console.log("getting all listings");
+      
       return await this.databases.listDocuments(
         conf.appwriteDatabaseId,
         conf.appwriteCollectionId,
@@ -117,6 +126,8 @@ export class Service {
 
   async uploadFile(file) {
     try {
+      console.log("uploading a file");
+      
       return await this.bucket.createFile(
         conf.appwriteBucketId,
         ID.unique(),
@@ -129,6 +140,8 @@ export class Service {
   }
 
   async deleteFile(fileId) {
+    console.log("deleting a file");
+    
     try {
       await this.bucket.deleteFile(conf.appwriteBucketId, fileId);
       return true;
@@ -139,6 +152,8 @@ export class Service {
   }
 
   getFilePreview(fileID) {
+    console.log("getting a file preview");
+    
     return this.bucket.getFilePreview(conf.appwriteBucketId, fileID);
   }
 }

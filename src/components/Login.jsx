@@ -30,7 +30,7 @@ export default function Login() {
       console.log("Session response:", session);
 
       if (session) {
-        const userData = await authService.getCurrentUSer();
+        const userData = await authService.getCurrentUser();
         console.log("User data:", userData);
         if (userData) {
           dispatch(authLogin(userData));
