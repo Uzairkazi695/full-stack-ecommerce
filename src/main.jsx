@@ -9,6 +9,7 @@ import Home from "./pages/Home.jsx";
 import Login from "./components/Login.jsx";
 import Signup from "./components/Signup.jsx";
 import ProductForm from "./components/producForm/ProductForm.jsx";
+import ProductPage from "./pages/ProductPage.jsx";
 
 const router = createBrowserRouter([
   {
@@ -30,6 +31,10 @@ const router = createBrowserRouter([
       {
         path: "/add-product",
         element: <ProductForm />,
+      },
+      {
+        path: "/product/:slug",
+        element: <ProductPage />,
       },
     ],
   },

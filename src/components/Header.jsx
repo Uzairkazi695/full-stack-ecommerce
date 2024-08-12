@@ -13,6 +13,8 @@ export default function Header() {
   const [userData, setUserData] = useState("");
 
   const totalQty = useSelector((state) => state.cart.totalQty);
+  const authStatus = useSelector((state) => state.auth.status);
+  console.log(authStatus);
 
   const dispatch = useDispatch();
   const logoutHandler = () => {
@@ -23,11 +25,11 @@ export default function Header() {
     async function getUserData() {
       const res = await authService.getCurrentUser();
       const userData = res.labels[0];
-      return userData;
+      setUserData(userData);
     }
-    getUserData().then((userData) => setUserData(userData));
-    console.log(userData);
-  });
+    getUserData();
+  }, [authStatus]);
+
   return (
     <>
       <header className="w-full h-20 bg-[#FDF8EB]  flex justify-between sticky top-0 shadow-md z-20">
@@ -48,9 +50,11 @@ export default function Header() {
                 <Link to={"add-product"}>Add Product</Link>
               </li>
             )}
-            <li>
+            {userData ? (
               <button onClick={logoutHandler}>Log out</button>
-            </li>
+            ) : (
+              <Link to={"/login"}>Login</Link>
+            )}
             <li>
               <ModeToggle />{" "}
             </li>

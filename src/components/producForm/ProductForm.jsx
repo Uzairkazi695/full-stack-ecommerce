@@ -66,7 +66,6 @@ export default function ProductForm({ product }) {
             productId: fileID,
           });
           console.log("createListing", dbPost);
-          
 
           if (dbPost) {
             navigate(`./product/${dbPost.$id}`);
@@ -120,17 +119,31 @@ export default function ProductForm({ product }) {
           id="slug"
           type="text"
           placeholder="slug"
-          {...register("slug", { required: true })}
+          maxLength={36}
+          {...register("slug", { required: true, maxLength: 36 })}
           onInput={(e) => {
-            setValue("slug", slugTransform(e.currentTarget.value), {
-              shouldValidate: true,
-            });
+            const newValue = e.currentTarget.value;
+            if (newValue.length <= 36) {
+              setValue("slug", slugTransform(e.currentTarget.value), {
+                shouldValidate: true,
+              });
+            } else {
+              setValue("slug", slugTransform(newValue.slice(0, 36)), {
+                shouldValidate: true,
+              });
+            }
           }}
         />
         <Label htmlFor="description">
           Description <span className="text-red-600">*</span>
         </Label>
-        <Textarea label="description" name="description" control={control} />
+        <Textarea
+          id="description"
+          label="description"
+          name="description"
+          control={control}
+          {...register("description", { required: true })}
+        />
         <Label htmlFor="category">
           Product Category<span className="text-red-600">*</span>
         </Label>

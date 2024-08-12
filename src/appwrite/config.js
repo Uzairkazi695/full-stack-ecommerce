@@ -106,11 +106,12 @@ export class Service {
     try {
       console.log("getting a listing");
 
-      return await this.databases.getDocument(
+      const result = await this.databases.getDocument(
         conf.appwriteDatabaseId,
         conf.appwriteCollectionId,
         slug
       );
+      return result;
     } catch (error) {
       console.log("Appwrite service :: getListing :: error ", error);
       return false;
@@ -160,13 +161,13 @@ export class Service {
   }
 
   getFilePreview(fileID) {
-    console.log("getting a file preview");
+    console.log("getting a file preview for image");
 
     return this.bucket.getFilePreview(conf.appwriteBucketId, fileID);
   }
 
-  adminRole(){
-    return Role.team("admin")
+  adminRole() {
+    return Role.team("admin");
   }
 }
 
