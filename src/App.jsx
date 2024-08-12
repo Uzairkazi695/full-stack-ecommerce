@@ -9,7 +9,6 @@ function App() {
     <>
       <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
         <Header />
-        <ProductForm />
         <Outlet />
         <Footer />
       </ThemeProvider>

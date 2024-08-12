@@ -1,15 +1,33 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { IoBagHandleSharp } from "react-icons/io5";
 import { CiMenuBurger } from "react-icons/ci";
 import { Link } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { ModeToggle } from "./mode-toggle";
+import service from "../appwrite/config";
+import authService from "../appwrite/auth";
+import { logout } from "../store/authSlice";
 
 export default function Header() {
   const [isOpen, setIsOpen] = useState(false);
+  const [userData, setUserData] = useState("");
 
   const totalQty = useSelector((state) => state.cart.totalQty);
 
+  const dispatch = useDispatch();
+  const logoutHandler = () => {
+    authService.logout().then(() => dispatch(logout));
+  };
+
+  useEffect(() => {
+    async function getUserData() {
+      const res = await authService.getCurrentUser();
+      const userData = res.labels[0];
+      return userData;
+    }
+    getUserData().then((userData) => setUserData(userData));
+    console.log(userData);
+  });
   return (
     <>
       <header className="w-full h-20 bg-[#FDF8EB]  flex justify-between sticky top-0 shadow-md z-20">
@@ -24,11 +42,14 @@ export default function Header() {
             <li>
               <Link to={"products"}>Products</Link>
             </li>
+
+            {userData === "admin" && (
+              <li>
+                <Link to={"add-product"}>Add Product</Link>
+              </li>
+            )}
             <li>
-              <a href="#about">About</a>
-            </li>
-            <li>
-              <a href="#service">Services</a>
+              <button onClick={logoutHandler}>Log out</button>
             </li>
             <li>
               <ModeToggle />{" "}
@@ -63,7 +84,7 @@ export default function Header() {
               <Link to={"products"}>Products</Link>
             </li>
             <li className="hover:text-[#5d5048]">
-              <a href="#about">About</a>
+              <Link to={"add-product"}>Add Product</Link>
             </li>
             <li className="hover:text-[#5d5048]">
               <a href="#service">Services</a>
