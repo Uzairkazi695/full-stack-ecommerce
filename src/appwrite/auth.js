@@ -33,7 +33,7 @@ export class AuthService {
   async login({ email, password }) {
     try {
       console.log(this.getCurrentUser().then(res => res));
-      
+      // this.account.deleteSessions()
       return await this.account.createEmailPasswordSession(email, password);
     } catch (error) {
       throw error;

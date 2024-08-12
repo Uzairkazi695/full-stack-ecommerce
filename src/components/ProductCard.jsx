@@ -11,6 +11,8 @@ import service from "../appwrite/config";
 import { Button } from "./ui/button";
 import { useDispatch, useSelector } from "react-redux";
 import { addToCart, setTotalQty, removeFromCart } from "@/store/cartSlice";
+import authService from "../appwrite/auth";
+import { useEffect, useState } from "react";
 
 function ProductCard(prod) {
   const { title, image, price, category, $id } = prod;
@@ -19,23 +21,71 @@ function ProductCard(prod) {
     return state.cart.cart;
   });
 
-  const cartHandler = () => {
-    dispatch(addToCart(prod));
-    dispatch(setTotalQty());
-  };
-  const removeCartHandler = () => {
-    cart.map((prod) => {
-      if (prod.$id === $id) {
-        dispatch(removeFromCart(prod.id));
-        dispatch(setTotalQty());
-      } else {
-        return prod;
-      }
-    });
+  console.log([cart]);
+
+  const [userData, setUserData] = useState("");
+  const [hasAddedToCart, setHasAddedToCart] = useState(false);
+
+  useEffect(() => {
+    async function getUserData() {
+      const res = await authService.getCurrentUser();
+      const userData = res.$id;
+      setUserData(userData);
+    }
+    getUserData();
+  }, []);
+
+  const cartHandler = async () => {
+    try {
+      await service.addCartItem(userData, prod.$id, prod.qty);
+      dispatch(addToCart(prod));
+      dispatch(setTotalQty());
+      setHasAddedToCart(true);
+    } catch (error) {
+      console.error("Error adding item to cart:", error);
+    }
   };
 
-  
-  
+  const checkIfDocumentExists = async (id) => {
+    try {
+      await service.getCartItems(id);
+      return true;
+    } catch (error) {
+      if (
+        error.message.includes(
+          "Document with the requested ID could not be found"
+        )
+      ) {
+        return false;
+      }
+      throw error;
+    }
+  };
+  const removeCartHandler = async () => {
+    try {
+      // Filter the items that match and remove them
+      const itemsToRemove = cart.filter((prod) => prod.$id === $id);
+
+      const itemExists = await checkIfDocumentExists($id);
+      if (!itemExists) {
+        console.error("Item not found in database.");
+        return;
+      }
+      // Process all the removals concurrently
+      await Promise.all(
+        itemsToRemove.map(async (prod) => {
+          await service.deleteCartItem(prod.productId);
+          dispatch(removeFromCart(prod.id));
+        })
+      );
+      console.log("item removed from the cart");
+
+      // Update the total quantity
+      dispatch(setTotalQty());
+    } catch (error) {
+      console.error("Error removing item from cart:", error);
+    }
+  };
 
   return (
     <>
