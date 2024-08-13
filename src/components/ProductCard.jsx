@@ -18,7 +18,6 @@ function ProductCard(prod) {
   const dispatch = useDispatch();
   const cart = useSelector((state) => state.cart.cart);
   const userStatus = useSelector((state) => state.auth.userData);
-  // console.log(cart);
 
   useEffect(() => {
     async function getUserData() {
@@ -31,7 +30,6 @@ function ProductCard(prod) {
     }
     getUserData();
   }, [dispatch]);
- 
 
   const cartHandler = async () => {
     try {

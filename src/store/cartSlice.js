@@ -1,10 +1,25 @@
-import { createSlice } from "@reduxjs/toolkit";
-import service from "../appwrite/config";
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import service from "../appwrite/config"; // Adjust the path accordingly
+
+// Asynchronous thunk for updating cart item quantity in the backend
+export const updateCartItemQty = createAsyncThunk(
+  "cart/updateCartItemQty",
+  async ({ userId, productId, qty }, { rejectWithValue }) => {
+    try {
+      const response = await service.updateCartItem(userId, productId, qty);
+      return { productId, qty }; // Return necessary data to be handled in the reducers
+    } catch (error) {
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
 
 const initialState = {
   cart: [],
   totalAmount: 0,
   totalQty: 0,
+  status: 'idle', // idle | loading | succeeded | failed
+  error: null,
 };
 
 const cartSlice = createSlice({
@@ -17,7 +32,7 @@ const cartSlice = createSlice({
     addToCart: (state, action) => {
       const cartItem = {
         ...action.payload,
-        qty: 1,
+        qty: 1, // Ensure qty is initialized as a number
       };
       state.cart.push(cartItem);
     },
@@ -28,9 +43,8 @@ const cartSlice = createSlice({
     },
     setTotalQty: (state) => {
       state.totalQty = state.cart.reduce((total, item) => {
-        return total + item.quantity;
+        return total + item.qty;
       }, 0);
-      console.log("Total Qty:", state.totalQty);
     },
     setTotal: (state) => {
       state.totalAmount = state.cart.reduce(
@@ -39,9 +53,26 @@ const cartSlice = createSlice({
       );
     },
   },
+  extraReducers: (builder) => {
+    builder
+      .addCase(updateCartItemQty.pending, (state) => {
+        state.status = 'loading';
+      })
+      .addCase(updateCartItemQty.fulfilled, (state, action) => {
+        state.status = 'succeeded';
+        const { productId, qty } = action.payload;
+        const cartItem = state.cart.find(item => item.productId === productId);
+        if (cartItem) {
+          cartItem.qty = qty;
+        }
+      })
+      .addCase(updateCartItemQty.rejected, (state, action) => {
+        state.status = 'failed';
+        state.error = action.payload || 'Failed to update cart item';
+      });
+  },
 });
 
-export const { setCart, addToCart, removeFromCart, setTotalQty, setTotal } =
-  cartSlice.actions;
+export const { setCart, addToCart, removeFromCart, setTotalQty, setTotal } = cartSlice.actions;
 
 export default cartSlice.reducer;

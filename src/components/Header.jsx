@@ -15,7 +15,6 @@ export default function Header() {
   const totalQty = useSelector((state) => state.cart.totalQty);
 
   const authStatus = useSelector((state) => state.auth.status);
-  console.log(authStatus);
 
   const dispatch = useDispatch();
   const logoutHandler = async () => {
