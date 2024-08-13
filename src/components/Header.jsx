@@ -6,29 +6,30 @@ import { useDispatch, useSelector } from "react-redux";
 import { ModeToggle } from "./mode-toggle";
 import service from "../appwrite/config";
 import authService from "../appwrite/auth";
-import { logout } from "../store/authSlice";
+import { login, logout } from "../store/authSlice";
 
 export default function Header() {
   const [isOpen, setIsOpen] = useState(false);
   const [userData, setUserData] = useState("");
 
   const totalQty = useSelector((state) => state.cart.totalQty);
+
   const authStatus = useSelector((state) => state.auth.status);
   console.log(authStatus);
 
   const dispatch = useDispatch();
-  const logoutHandler = () => {
-    authService.logout().then(() => dispatch(logout));
+  const logoutHandler = async () => {
+    await authService.logout().then(() => dispatch(logout));
   };
 
   useEffect(() => {
     async function getUserData() {
       const res = await authService.getCurrentUser();
-      const userData = res.labels[0];
-      setUserData(userData);
+      if (res) dispatch(login(res));
+      setUserData(res.$id);
     }
     getUserData();
-  }, [authStatus]);
+  }, [dispatch]);
 
   return (
     <>
@@ -50,7 +51,7 @@ export default function Header() {
                 <Link to={"add-product"}>Add Product</Link>
               </li>
             )}
-            {userData ? (
+            {authStatus ? (
               <button onClick={logoutHandler}>Log out</button>
             ) : (
               <Link to={"/login"}>Login</Link>
@@ -64,7 +65,7 @@ export default function Header() {
               <IoBagHandleSharp />
             </Link>
             <div className="bg-red-500 absolute -right-2 -bottom-1 text-[12px] w-[18px] h-[18px] text-white rounded-full flex justify-center items-center">
-              {totalQty}
+              {isNaN(totalQty) ? 0 : totalQty}
             </div>
           </div>
           <div

@@ -8,16 +8,18 @@ import authService from "@/appwrite/auth";
 
 function ProductPage() {
   const [product, setProduct] = useState(null);
-  console.log(product);
+  // console.log(product);
 
   const [isAdmin, setIsAdmin] = useState("");
   const { slug } = useParams();
-  console.log(slug);
+  // console.log(slug);
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const data = useSelector((state) => state.auth.userData);
+  // console.log(data);
+  
 
   const cart = useSelector((state) => {
     return state.cart.cart;

@@ -104,8 +104,6 @@ export class Service {
 
   async getListing(slug) {
     try {
-      
-
       const result = await this.databases.getDocument(
         conf.appwriteDatabaseId,
         conf.appwriteCollectionId,
@@ -120,8 +118,6 @@ export class Service {
 
   async getListings(queries = [Query.equal("status", "active")]) {
     try {
-      
-
       return await this.databases.listDocuments(
         conf.appwriteDatabaseId,
         conf.appwriteCollectionId,
@@ -161,8 +157,6 @@ export class Service {
   }
 
   getFilePreview(fileID) {
-   
-
     return this.bucket.getFilePreview(conf.appwriteBucketId, fileID);
   }
 
@@ -175,7 +169,7 @@ export class Service {
       console.log("adding item to cart");
 
       // Generate a unique document ID for the cart item
-      const cartItemId = ID.unique() // You could also use `ID.unique()` if preferred
+      const cartItemId = ID.unique(); // You could also use `ID.unique()` if preferred
 
       return await this.databases.createDocument(
         conf.appwriteDatabaseId,
@@ -214,14 +208,15 @@ export class Service {
     try {
       console.log("deleting cart item");
       console.log(cartItemId);
-      
 
-      await this.databases.deleteDocument(
+      const result = await this.databases.deleteDocument(
         conf.appwriteDatabaseId,
         conf.appwriteCartCollectionId, // Define a separate collection for cart items
         cartItemId
       );
-      return true;
+
+      console.log(result);
+      return result;
     } catch (error) {
       console.log("Appwrite service :: deleteCartItem :: error ", error);
       return false;
@@ -235,7 +230,7 @@ export class Service {
       return await this.databases.listDocuments(
         conf.appwriteDatabaseId,
         conf.appwriteCartCollectionId, // Define a separate collection for cart items
-        [Query.equal("userId", userId)]
+        [Query.equal('userId', userId)]
       );
     } catch (error) {
       console.log("Appwrite service :: getCartItems :: error ", error);
