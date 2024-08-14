@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useSelector } from "react-redux";
 import { Button } from "../ui/button";
@@ -15,6 +15,7 @@ import {
   SelectValue,
 } from "../ui/select";
 import service from "../../appwrite/config";
+import authService from "@/appwrite/auth";
 
 export default function ProductForm({ product }) {
   const { register, handleSubmit, watch, setValue, getValues, control } =
@@ -32,6 +33,19 @@ export default function ProductForm({ product }) {
 
   const navigate = useNavigate();
   const userData = useSelector((state) => state.auth.userData);
+  const [userId, setUserId] = useState("");
+
+  useEffect(() => {
+    async function getUserData() {
+      const res = await authService.getCurrentUser();
+      if (res) {
+        setUserId(res.$id);
+      }
+      console.log(res);
+    }
+    getUserData();
+  }, []);
+  console.log("hello");
 
   const submit = async (data) => {
     try {
@@ -62,7 +76,7 @@ export default function ProductForm({ product }) {
 
           const dbPost = await service.createListing({
             ...data,
-            userId: fileID,
+            userId: userId,
             productId: fileID,
           });
           console.log("createListing", dbPost);
@@ -110,7 +124,8 @@ export default function ProductForm({ product }) {
           id="title"
           type="text"
           placeholder="Title"
-          {...register("title", { required: true })}
+          maxLength={36}
+          {...register("title", { required: true, maxLength: 36 })}
         />
         <Label htmlFor="slug">
           Slug <span className="text-red-600">*</span>

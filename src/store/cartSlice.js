@@ -29,7 +29,7 @@ const cartSlice = createSlice({
     addToCart: (state, action) => {
       const cartItem = {
         ...action.payload,
-        quantity: 1, 
+        quantity: 1,
       };
       state.cart.push(cartItem);
       localStorage.setItem("cart", JSON.stringify(state.cart));
@@ -88,10 +88,11 @@ const cartSlice = createSlice({
       state.totalQty = state.cart.reduce((total, item) => {
         return total + item.quantity;
       }, 0);
+      localStorage.setItem("cart", JSON.stringify(state.cart));
     },
     setTotal: (state) => {
       state.totalAmount = state.cart.reduce(
-        (total, item) => total + item.price * item.quantity,
+        (total, item) => total + parseInt(item.price) * parseInt(item.quantity),
         0
       );
     },

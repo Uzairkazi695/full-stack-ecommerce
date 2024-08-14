@@ -164,7 +164,7 @@ export class Service {
     return Role.team("admin");
   }
 
-  async addCartItem(userId, productId, quantity) {
+  async addCartItem(userId, productId, quantity, price) {
     try {
       const cartItemId = ID.unique();
 
@@ -176,6 +176,7 @@ export class Service {
           userId,
           productId,
           quantity,
+          price
         }
       );
     } catch (error) {

@@ -33,7 +33,7 @@ function ProductCard(prod) {
 
   const cartHandler = async () => {
     try {
-      const data = await service.addCartItem(userStatus.$id, $id, 1);
+      const data = await service.addCartItem(userStatus.$id, $id, 1, price);
       dispatch(addToCart(data));
       dispatch(setTotalQty());
     } catch (error) {

@@ -1,5 +1,5 @@
 import conf from "../conf/conf.js";
-import { Client, Account, ID } from "appwrite";
+import { Client, Account, ID, Permission, Role } from "appwrite";
 
 export class AuthService {
   client = new Client();
@@ -20,6 +20,7 @@ export class AuthService {
         password,
         name
       );
+      [Permission.read(Role.any())];
       if (userAccount) {
         return this.login({ email, password });
       } else {
@@ -32,12 +33,7 @@ export class AuthService {
 
   async login({ email, password }) {
     try {
-      console.log(this.getCurrentUser().then((res) => res));
-
-      // const session = await account.get();
-      
-      // if (session) this.account.deleteSessions();
-
+      [Permission.read(Role.any())];
       return await this.account.createEmailPasswordSession(email, password);
     } catch (error) {
       throw error;
@@ -46,6 +42,7 @@ export class AuthService {
 
   async getCurrentUser() {
     try {
+      [Permission.read(Role.any())];
       return await this.account.get();
     } catch (error) {
       console.log("Appwrite serive :: getCurrentUser :: error", error);
@@ -56,8 +53,7 @@ export class AuthService {
 
   async logout() {
     try {
-      console.log("logging out");
-
+      [Permission.read(Role.any())];
       return await this.account.deleteSessions();
     } catch (error) {
       console.log("Appwrite serive :: logout :: error", error);

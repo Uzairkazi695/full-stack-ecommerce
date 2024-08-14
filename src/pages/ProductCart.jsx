@@ -32,12 +32,8 @@ function Cart() {
     }
     getUserData();
   }, [dispatch]);
-
-  const [, forceRerender] = useState(0);
-
-  useEffect(() => {
-    forceRerender((prev) => prev + 1);
-  }, []);
+  console.log("products", products);
+  console.log("cart", cartItems);
 
   useEffect(() => {
     async function fetchProducts() {
@@ -99,17 +95,14 @@ function Cart() {
                 <FaPlus />
               </button>
               <p>Price: ₹{product.price}</p>
-              <p>
-                Total Price: ₹
-                {product.price * (cartItem ? cartItem.quantity : 0)}
-              </p>
-              <p>{cartTotal}</p>
+              <p>Total Price: ₹{parseInt(product.price) * cartItem.quantity}</p>
             </div>
           );
         })
       ) : (
         <p>Your cart is empty.</p>
       )}
+      <p>Total : {cartTotal}</p>
     </div>
   );
 }
