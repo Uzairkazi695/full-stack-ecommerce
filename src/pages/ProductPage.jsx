@@ -1,46 +1,42 @@
-import { addToCart, removeFromCart, setTotalQty } from "../store/cartSlice";
+import {
+  addToCart,
+  decrementQty,
+  incrementQty,
+  removeFromCart,
+  setTotalQty,
+} from "../store/cartSlice";
 import service from "../appwrite/config";
 import { Button } from "../components/ui/button";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import authService from "@/appwrite/auth";
+import { FaMinus, FaPlus } from "react-icons/fa";
 
 function ProductPage() {
   const [product, setProduct] = useState(null);
-  // console.log(product);
+  const dispatch = useDispatch();
+  const cart = useSelector((state) => state.cart.cart);
+  const userStatus = useSelector((state) => state.auth.userData);
 
   const [isAdmin, setIsAdmin] = useState("");
   const { slug } = useParams();
-  // console.log(slug);
 
   const navigate = useNavigate();
-  const dispatch = useDispatch();
-
-  const data = useSelector((state) => state.auth.userData);
-  // console.log(data);
-  
-
-  const cart = useSelector((state) => {
-    return state.cart.cart;
-  });
 
   useEffect(() => {
     async function getUserData() {
       const res = await authService.getCurrentUser();
-        console.log(res);
-        
+
       const userData = res.labels[0];
       setIsAdmin(userData);
     }
     getUserData();
-  }, []);
+  }, [dispatch]);
 
   useEffect(() => {
     if (slug) {
       service.getListing(slug).then((prod) => {
-        console.log(prod);
-
         if (prod) setProduct(prod);
         else navigate("/");
       });
@@ -56,19 +52,30 @@ function ProductPage() {
     });
   };
 
-  const cartHandler = () => {
-    dispatch(addToCart(product));
-    dispatch(setTotalQty());
+  const cartHandler = async () => {
+    try {
+      const data = await service.addCartItem(userStatus.$id, product.$id, 1);
+      dispatch(addToCart(data));
+      dispatch(setTotalQty());
+    } catch (error) {
+      console.error("Error adding item to cart:", error);
+    }
   };
-  const removeCartHandler = () => {
-    cart.map((prod) => {
-      if (prod.$id === product.$id) {
-        dispatch(removeFromCart(prod.id));
-        dispatch(setTotalQty());
-      } else {
-        return prod;
+
+  const removeCartHandler = async () => {
+    try {
+      const itemToRemove = cart.find((item) => item.productId === product.$id);
+      if (!itemToRemove) {
+        console.error("Item not found in cart.");
+        return;
       }
-    });
+
+      await service.deleteCartItem(itemToRemove.$id);
+      dispatch(removeFromCart(product.$id));
+      dispatch(setTotalQty());
+    } catch (error) {
+      console.error("Error removing item from cart:", error);
+    }
   };
 
   return (
@@ -99,15 +106,29 @@ function ProductPage() {
               </div>
               <div className="text-justify mt-2">{product.description}</div>
               <div className="flex items-center mt-5 gap-5">
-                {/* <button onClick={() => decrementQty(productData.id, productData.qty)}>
+                <button
+                  onClick={() => {
+                    dispatch(decrementQty(product.$id));
+                    dispatch(setTotalQty());
+                  }}
+                >
                   <FaMinus />
                 </button>
-                <div>{productData.qty}</div>
-                <button onClick={() => incrementQty(productData.id, productData.qty)}>
+                <div>
+                  {cart.map(
+                    (prod) => prod.productId === product.$id && prod.quantity
+                  )}
+                </div>
+                <button
+                  onClick={() => {
+                    dispatch(incrementQty(product.$id));
+                    dispatch(setTotalQty());
+                  }}
+                >
                   <FaPlus />
-                </button> */}
+                </button>
               </div>
-              {cart.some((prod) => prod.$id === product.$id) ? (
+              {cart.some((prod) => prod.productId === product.$id) ? (
                 <Button onClick={removeCartHandler}>Remove from cart</Button>
               ) : (
                 <Button onClick={cartHandler}>Add to cart</Button>

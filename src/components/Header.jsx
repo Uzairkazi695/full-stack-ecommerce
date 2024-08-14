@@ -7,6 +7,7 @@ import { ModeToggle } from "./mode-toggle";
 import service from "../appwrite/config";
 import authService from "../appwrite/auth";
 import { login, logout } from "../store/authSlice";
+import { setTotalQty } from "@/store/cartSlice";
 
 export default function Header() {
   const [isOpen, setIsOpen] = useState(false);
@@ -26,6 +27,7 @@ export default function Header() {
       const res = await authService.getCurrentUser();
       if (res) dispatch(login(res));
       setUserData(res.$id);
+      dispatch(setTotalQty())
     }
     getUserData();
   }, [dispatch]);

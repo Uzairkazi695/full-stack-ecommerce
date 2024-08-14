@@ -39,6 +39,7 @@ function ProductCard(prod) {
     } catch (error) {
       console.error("Error adding item to cart:", error);
     }
+    
   };
 
   const removeCartHandler = async () => {

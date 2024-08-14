@@ -1,9 +1,18 @@
 import { createSlice } from "@reduxjs/toolkit";
-import service from "@/appwrite/config"; // Adjust the path accordingly
-import useLocalStorage from "@/hooks/useLocalStorage";
+import service from "@/appwrite/config";
+
+const loadCartFromLocalStorage = () => {
+  try {
+    const serializedCart = localStorage.getItem("cart");
+    return serializedCart ? JSON.parse(serializedCart) : [];
+  } catch (e) {
+    console.warn("Failed to load cart from localStorage", e);
+    return [];
+  }
+};
 
 const initialState = {
-  cart: [],
+  cart: loadCartFromLocalStorage(),
   totalAmount: 0,
   totalQty: 0,
 };
@@ -14,36 +23,31 @@ const cartSlice = createSlice({
   reducers: {
     setCart: (state, action) => {
       state.cart = action.payload;
-      console.log("setCart", state.cart);
 
-      useLocalStorage(state.cart);
+      localStorage.setItem("cart", JSON.stringify(state.cart));
     },
     addToCart: (state, action) => {
       const cartItem = {
         ...action.payload,
-        qty: 1,
+        quantity: 1, 
       };
       state.cart.push(cartItem);
-      useLocalStorage(state.cart);
+      localStorage.setItem("cart", JSON.stringify(state.cart));
     },
     removeFromCart: (state, action) => {
       state.cart = state.cart.filter(
         (item) => item.productId !== action.payload
       );
-      useLocalStorage(state.cart);
+      localStorage.setItem("cart", JSON.stringify(state.cart));
     },
     incrementQty: (state, action) => {
       const productId = action.payload;
-      console.log(productId);
-      
+
       const cartItem = state.cart.find((item) => item.productId === productId);
-      console.log(cartItem);
-      
+
       if (cartItem) {
-        cartItem.quantity = cartItem.quantity || 0;
         cartItem.quantity += 1;
-        useLocalStorage(state.cart);
-        console.log("incrementing");
+        localStorage.setItem("cart", JSON.stringify(state.cart));
 
         const updateCartQty = async () => {
           await service.updateCartItem(
@@ -54,14 +58,13 @@ const cartSlice = createSlice({
         };
         updateCartQty();
       }
-      useLocalStorage(state.cart);
     },
     decrementQty: (state, action) => {
       const productId = action.payload;
       const cartItem = state.cart.find((item) => item.productId === productId);
       if (cartItem && cartItem.quantity > 1) {
         cartItem.quantity -= 1;
-        useLocalStorage(state.cart);
+        localStorage.setItem("cart", JSON.stringify(state.cart));
 
         const updateCartQty = async () => {
           await service.updateCartItem(
@@ -73,23 +76,22 @@ const cartSlice = createSlice({
         updateCartQty();
       } else if (cartItem && cartItem.quantity === 1) {
         state.cart = state.cart.filter((item) => item.productId !== productId);
-        useLocalStorage(state.cart);
+        localStorage.setItem("cart", JSON.stringify(state.cart));
 
         const deleteCartItem = async () => {
           await service.deleteCartItem(cartItem.$id);
         };
         deleteCartItem();
       }
-      useLocalStorage(state.cart);
     },
     setTotalQty: (state) => {
       state.totalQty = state.cart.reduce((total, item) => {
-        return total + item.quantity; // Ensure qty is used properly here
+        return total + item.quantity;
       }, 0);
     },
     setTotal: (state) => {
       state.totalAmount = state.cart.reduce(
-        (total, item) => total + item.price * item.qty,
+        (total, item) => total + item.price * item.quantity,
         0
       );
     },

@@ -1,7 +1,12 @@
 import authService from "@/appwrite/auth";
 import service from "@/appwrite/config";
 import { login } from "@/store/authSlice";
-import { incrementQty, decrementQty, setTotalQty } from "../store/cartSlice"; // Import decrementQty
+import {
+  incrementQty,
+  decrementQty,
+  setTotalQty,
+  setTotal,
+} from "../store/cartSlice"; // Import decrementQty
 import React, { useEffect, useState } from "react";
 import { FaMinus, FaPlus } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
@@ -11,7 +16,7 @@ function Cart() {
   const [userProductIds, setUserProductIds] = useState([]);
   const [products, setProducts] = useState([]);
   const cartItems = useSelector((state) => state.cart.cart);
-  console.log(cartItems);
+  const cartTotal = useSelector((state) => state.cart.totalAmount);
 
   useEffect(() => {
     async function getUserData() {
@@ -27,7 +32,12 @@ function Cart() {
     }
     getUserData();
   }, [dispatch]);
-  // console.log("hell");
+
+  const [, forceRerender] = useState(0);
+
+  useEffect(() => {
+    forceRerender((prev) => prev + 1);
+  }, []);
 
   useEffect(() => {
     async function fetchProducts() {
@@ -51,7 +61,6 @@ function Cart() {
       <h2>Cart</h2>
       {products.length > 0 ? (
         products.map((product) => {
-          // Find the corresponding cart item to get the quantity
           const cartItem = cartItems.find(
             (item) => item.productId === product.$id
           );
@@ -70,17 +79,23 @@ function Cart() {
               </div>
               <h3>{product.title}</h3>
               <p>{product.description}</p>
-              <button onClick={() => {
-                dispatch(decrementQty(product.$id))
-                dispatch(setTotalQty())
-              }}>
+              <button
+                onClick={() => {
+                  dispatch(decrementQty(product.$id));
+                  dispatch(setTotalQty());
+                  dispatch(setTotal());
+                }}
+              >
                 <FaMinus />
               </button>
               <div>{cartItem ? cartItem.quantity : 0}</div>
-              <button onClick={() => {
-                dispatch(incrementQty(product.$id))
-                dispatch(setTotalQty())
-              }}>
+              <button
+                onClick={() => {
+                  dispatch(incrementQty(product.$id));
+                  dispatch(setTotalQty());
+                  dispatch(setTotal());
+                }}
+              >
                 <FaPlus />
               </button>
               <p>Price: ₹{product.price}</p>
@@ -88,6 +103,7 @@ function Cart() {
                 Total Price: ₹
                 {product.price * (cartItem ? cartItem.quantity : 0)}
               </p>
+              <p>{cartTotal}</p>
             </div>
           );
         })
