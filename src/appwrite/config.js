@@ -183,18 +183,21 @@ export class Service {
       throw error;
     }
   }
-  async updateCartItem(cartItemId, quantity) {
+  async updateCartItem(userId, productId, quantity) {
     try {
       console.log("updating cart item");
 
       return await this.databases.updateDocument(
         conf.appwriteDatabaseId,
         conf.appwriteCartCollectionId,
-        cartItemId,
+        // [Query.equal("userId", userId)],
+        productId,
         {
           quantity,
         }
       );
+      console.log("update completed");
+      
     } catch (error) {
       console.log("Appwrite service :: updateCartItem :: error ", error);
       throw error;
