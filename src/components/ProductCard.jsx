@@ -5,6 +5,7 @@ import {
   addToCart,
   removeFromCart,
   setTotalQty,
+  setTotal,
 } from "@/store/cartSlice";
 import service from "../appwrite/config";
 import authService from "../appwrite/auth";
@@ -36,10 +37,10 @@ function ProductCard(prod) {
       const data = await service.addCartItem(userStatus.$id, $id, 1, price);
       dispatch(addToCart(data));
       dispatch(setTotalQty());
+      dispatch(setTotal());
     } catch (error) {
       console.error("Error adding item to cart:", error);
     }
-    
   };
 
   const removeCartHandler = async () => {
@@ -53,6 +54,7 @@ function ProductCard(prod) {
       await service.deleteCartItem(itemToRemove.$id);
       dispatch(removeFromCart($id));
       dispatch(setTotalQty());
+      dispatch(setTotal());
     } catch (error) {
       console.error("Error removing item from cart:", error);
     }
@@ -60,8 +62,8 @@ function ProductCard(prod) {
 
   return (
     <>
-      <Link to={`/product/${$id}`}>
-        <Card>
+      <Card>
+        <Link to={`/product/${$id}`}>
           <CardContent>
             <div className="h-1/2 flex justify-center items-center mt-7">
               <img
@@ -76,17 +78,17 @@ function ProductCard(prod) {
               <div className="mt-1">₹{price}</div>
             </div>
           </CardContent>
-        </Card>
-      </Link>
-      {cart.some((prod) => prod.productId === $id) ? (
-        <CardFooter>
-          <Button onClick={removeCartHandler}>Remove from cart</Button>
-        </CardFooter>
-      ) : (
-        <CardFooter>
-          <Button onClick={cartHandler}>Add to cart</Button>
-        </CardFooter>
-      )}
+        </Link>
+        {cart.some((prod) => prod.productId === $id) ? (
+          <CardFooter>
+            <Button onClick={removeCartHandler}>Remove from cart</Button>
+          </CardFooter>
+        ) : (
+          <CardFooter>
+            <Button onClick={cartHandler}>Add to cart</Button>
+          </CardFooter>
+        )}
+      </Card>
     </>
   );
 }

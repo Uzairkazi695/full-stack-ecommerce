@@ -176,7 +176,7 @@ export class Service {
           userId,
           productId,
           quantity,
-          price
+          price,
         }
       );
     } catch (error) {
@@ -198,7 +198,6 @@ export class Service {
         }
       );
       console.log("update completed");
-      
     } catch (error) {
       console.log("Appwrite service :: updateCartItem :: error ", error);
       throw error;
@@ -212,6 +211,7 @@ export class Service {
         conf.appwriteCartCollectionId,
         cartItemId
       );
+      console.log("item delete");
 
       return result;
     } catch (error) {

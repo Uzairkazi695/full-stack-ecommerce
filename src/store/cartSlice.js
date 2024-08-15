@@ -35,10 +35,20 @@ const cartSlice = createSlice({
       localStorage.setItem("cart", JSON.stringify(state.cart));
     },
     removeFromCart: (state, action) => {
-      state.cart = state.cart.filter(
-        (item) => item.productId !== action.payload
-      );
-      localStorage.setItem("cart", JSON.stringify(state.cart));
+      const productId = action.payload;
+
+      const cartItem = state.cart.find((item) => item.productId === productId);
+      if (cartItem) {
+        state.cart = state.cart.filter(
+          (item) => item.productId !== action.payload
+        );
+        localStorage.setItem("cart", JSON.stringify(state.cart));
+
+        const deleteCartItem = async () => {
+          return await service.deleteCartItem(cartItem.$id);
+        };
+        deleteCartItem();
+      }
     },
     incrementQty: (state, action) => {
       const productId = action.payload;
@@ -95,6 +105,7 @@ const cartSlice = createSlice({
         (total, item) => total + parseInt(item.price) * parseInt(item.quantity),
         0
       );
+      localStorage.setItem("totalAmount", JSON.stringify(state.totalAmount));
     },
   },
 });

@@ -20,6 +20,7 @@ export default function Header() {
   const dispatch = useDispatch();
   const logoutHandler = async () => {
     await authService.logout().then(() => dispatch(logout));
+    localStorage.removeItem("cart")
   };
 
   useEffect(() => {

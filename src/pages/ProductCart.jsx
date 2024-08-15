@@ -6,15 +6,20 @@ import {
   decrementQty,
   setTotalQty,
   setTotal,
+  removeFromCart,
 } from "../store/cartSlice"; // Import decrementQty
 import React, { useEffect, useState } from "react";
 import { FaMinus, FaPlus } from "react-icons/fa";
+import { RiDeleteBin6Line } from "react-icons/ri";
 import { useDispatch, useSelector } from "react-redux";
+import { Button } from "@/components/ui/button";
+import { Link } from "react-router-dom";
 
 function Cart() {
   const dispatch = useDispatch();
   const [userProductIds, setUserProductIds] = useState([]);
   const [products, setProducts] = useState([]);
+
   const cartItems = useSelector((state) => state.cart.cart);
   const cartTotal = useSelector((state) => state.cart.totalAmount);
 
@@ -32,8 +37,6 @@ function Cart() {
     }
     getUserData();
   }, [dispatch]);
-  console.log("products", products);
-  console.log("cart", cartItems);
 
   useEffect(() => {
     async function fetchProducts() {
@@ -54,7 +57,11 @@ function Cart() {
 
   return (
     <div>
-      <h2>Cart</h2>
+      <div className="w-screen">
+        <h2 className="flex justify-center items-center text-2xl font-bold">
+          Your Cart
+        </h2>
+      </div>
       {products.length > 0 ? (
         products.map((product) => {
           const cartItem = cartItems.find(
@@ -66,43 +73,68 @@ function Cart() {
               key={product.$id}
               className="mt-5 ml-3 flex flex-col items-center sm:flex-row"
             >
-              <div>
+              <Link to={`/product/${product.$id}`}>
                 <img
                   src={service.getFilePreview(product.image)}
                   alt={product.title}
                   className="max-w-48 h-auto"
                 />
+              </Link>
+              <h3 className="uppercase text-semibold">{product.title}</h3>
+
+              <div className="flex items-center mt-5 gap-5 ml-5 flex-wrap">
+                <Button
+                  onClick={() => {
+                    dispatch(decrementQty(product.$id));
+                    dispatch(setTotalQty());
+                    dispatch(setTotal());
+                  }}
+                >
+                  <FaMinus />
+                </Button>
+                <div>{cartItem ? cartItem.quantity : 0}</div>
+                <Button
+                  onClick={() => {
+                    dispatch(incrementQty(product.$id));
+                    dispatch(setTotalQty());
+                    dispatch(setTotal());
+                  }}
+                >
+                  <FaPlus />
+                </Button>
+                <p className="text-gray-400 flex justify-center items-center">
+                  ₹{product.price}
+                </p>
+                <p className="flex justify-center items-center">
+                  ₹{cartItem && parseInt(product.price) * cartItem.quantity}
+                </p>
+                <Button
+                  onClick={() => {
+                    dispatch(removeFromCart(product.$id));
+                    dispatch(setTotalQty());
+                    dispatch(setTotal());
+                  }}
+                  className="flex justify-center items-center"
+                >
+                  <RiDeleteBin6Line />
+                </Button>
               </div>
-              <h3>{product.title}</h3>
-              <p>{product.description}</p>
-              <button
-                onClick={() => {
-                  dispatch(decrementQty(product.$id));
-                  dispatch(setTotalQty());
-                  dispatch(setTotal());
-                }}
-              >
-                <FaMinus />
-              </button>
-              <div>{cartItem ? cartItem.quantity : 0}</div>
-              <button
-                onClick={() => {
-                  dispatch(incrementQty(product.$id));
-                  dispatch(setTotalQty());
-                  dispatch(setTotal());
-                }}
-              >
-                <FaPlus />
-              </button>
-              <p>Price: ₹{product.price}</p>
-              <p>Total Price: ₹{parseInt(product.price) * cartItem.quantity}</p>
             </div>
           );
         })
       ) : (
         <p>Your cart is empty.</p>
       )}
-      <p>Total : {cartTotal}</p>
+      <div className="flex flex-col items-center mt-3">
+        <div className="flex items-center gap-4 text-lg">
+          <div className="font-semibold">
+            Total: ₹{Math.round(cartTotal * 100) / 100}
+          </div>
+        </div>
+        <Button className="w-32 h-10 rounded-full flex justify-center items-center">
+          Checkout
+        </Button>
+      </div>
     </div>
   );
 }

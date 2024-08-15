@@ -3,6 +3,7 @@ import {
   decrementQty,
   incrementQty,
   removeFromCart,
+  setTotal,
   setTotalQty,
 } from "../store/cartSlice";
 import service from "../appwrite/config";
@@ -54,9 +55,15 @@ function ProductPage() {
 
   const cartHandler = async () => {
     try {
-      const data = await service.addCartItem(userStatus.$id, product.$id, 1);
+      const data = await service.addCartItem(
+        userStatus.$id,
+        product.$id,
+        1,
+        product.price
+      );
       dispatch(addToCart(data));
       dispatch(setTotalQty());
+      dispatch(setTotal());
     } catch (error) {
       console.error("Error adding item to cart:", error);
     }
@@ -73,6 +80,7 @@ function ProductPage() {
       await service.deleteCartItem(itemToRemove.$id);
       dispatch(removeFromCart(product.$id));
       dispatch(setTotalQty());
+      dispatch(setTotal());
     } catch (error) {
       console.error("Error removing item from cart:", error);
     }
