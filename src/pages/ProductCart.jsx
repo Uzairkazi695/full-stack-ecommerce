@@ -14,6 +14,8 @@ import { RiDeleteBin6Line } from "react-icons/ri";
 import { useDispatch, useSelector } from "react-redux";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
+import conf from "../conf/conf";
+import { Client, Account, Functions, Databases } from "appwrite";
 
 function Cart() {
   const dispatch = useDispatch();
@@ -54,6 +56,46 @@ function Cart() {
       fetchProducts();
     }
   }, [userProductIds]);
+
+  
+  const client = new Client()
+    .setEndpoint(conf.appwriteUrl)
+    .setProject(conf.appwriteFunctionProjectId);
+  const account = new Account(client);
+  const functions = new Functions(client);
+  const databases = new Databases(client);
+
+
+  async function order() {
+    const execution = await functions.createExecution(
+      conf.appwriteFunctionId,
+      JSON.stringify({
+        failureUrl: window.location.href,
+        successUrl: window.location.href,
+      }),
+      console.log("here"),
+      
+      false,
+      '/checkout',
+      'POST',
+      console.log("again"),
+      
+      {
+        'Content-Type': 'application/json',
+      }
+    );
+    console.log(execution);
+    
+    const url =
+      execution.responseHeaders.find(
+        (header) => { console.log(header);
+        
+          return header.name === 'location'}
+      ) ?? {};
+      console.log(url);
+      
+    window.location.replace(url.value ?? '/');
+  }
 
   return (
     <div>
@@ -131,7 +173,7 @@ function Cart() {
             Total: ₹{Math.round(cartTotal * 100) / 100}
           </div>
         </div>
-        <Button className="w-32 h-10 rounded-full flex justify-center items-center">
+        <Button className="w-32 h-10 rounded-full flex justify-center items-center" onClick={order}>
           Checkout
         </Button>
       </div>

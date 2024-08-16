@@ -13,6 +13,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import authService from "@/appwrite/auth";
 import { FaMinus, FaPlus } from "react-icons/fa";
+import { useToast, toast } from "../components/ui/use-toast";
 
 function ProductPage() {
   const [product, setProduct] = useState(null);
@@ -22,6 +23,7 @@ function ProductPage() {
 
   const [isAdmin, setIsAdmin] = useState("");
   const { slug } = useParams();
+  const { toast } = useToast();
 
   const navigate = useNavigate();
 
@@ -64,6 +66,10 @@ function ProductPage() {
       dispatch(addToCart(data));
       dispatch(setTotalQty());
       dispatch(setTotal());
+      toast({
+        variant: "outline",
+        description: "Product added to cart",
+      });
     } catch (error) {
       console.error("Error adding item to cart:", error);
     }
@@ -81,6 +87,9 @@ function ProductPage() {
       dispatch(removeFromCart(product.$id));
       dispatch(setTotalQty());
       dispatch(setTotal());
+      toast({
+        description: "Product removed from cart",
+      });
     } catch (error) {
       console.error("Error removing item from cart:", error);
     }
@@ -95,7 +104,6 @@ function ProductPage() {
           className="flex justify-center items-center gap-2 ml-5 mt-5 shadow-md w-24 h-10"
         >
           <span>Back</span>
-          Back
         </button>
         {product ? (
           <div className="flex flex-col items-center md:flex-row w-full">

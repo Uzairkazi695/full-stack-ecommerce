@@ -13,13 +13,14 @@ import { login } from "../store/authSlice";
 import { Link } from "react-router-dom";
 import { Card, CardContent, CardFooter } from "./ui/card";
 import { Button } from "./ui/button";
+import { useToast, toast } from "./ui/use-toast";
 
 function ProductCard(prod) {
   const { title, image, price, category, $id } = prod;
   const dispatch = useDispatch();
   const cart = useSelector((state) => state.cart.cart);
   const userStatus = useSelector((state) => state.auth.userData);
-
+  const { toast } = useToast();
   useEffect(() => {
     async function getUserData() {
       const res = await authService.getCurrentUser();
@@ -38,8 +39,19 @@ function ProductCard(prod) {
       dispatch(addToCart(data));
       dispatch(setTotalQty());
       dispatch(setTotal());
+      console.log("before toast ");
+      toast({
+        variant: "outline",
+        description: "Product added to cart",
+      });
+      console.log("here");
     } catch (error) {
       console.error("Error adding item to cart:", error);
+      toast({
+        variant: "destructive",
+        title: "Uh oh! Something went wrong.",
+        description: "There was a problem with your request.",
+      });
     }
   };
 
@@ -55,8 +67,16 @@ function ProductCard(prod) {
       dispatch(removeFromCart($id));
       dispatch(setTotalQty());
       dispatch(setTotal());
+      toast({
+        description: "Product removed from cart",
+      });
     } catch (error) {
       console.error("Error removing item from cart:", error);
+      toast({
+        variant: "destructive",
+        title: "Uh oh! Something went wrong.",
+        description: "There was a problem with your request.",
+      });
     }
   };
 

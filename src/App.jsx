@@ -3,6 +3,7 @@ import Footer from "./components/Footer";
 import Header from "./components/Header";
 import { ThemeProvider } from "./components/Theme-provider";
 import ProductForm from "./components/producForm/ProductForm";
+import { Toaster } from "./components/ui/toaster";
 
 function App() {
   return (
@@ -12,6 +13,7 @@ function App() {
         <Outlet />
         <Footer />
       </ThemeProvider>
+      <Toaster />
     </>
   );
 }
