@@ -1,0 +1,3 @@
+[submodule "payment"]
+	path = payment
+	url = git@github.com:Uzairkazi695/payments-with-stripe.git

@@ -211,9 +211,9 @@ export class Service {
         conf.appwriteCartCollectionId,
         cartItemId
       );
-      console.log("item delete");
 
       return result;
+      console.log("item delete");
     } catch (error) {
       console.log("Appwrite service :: deleteCartItem :: error ", error);
       return false;
