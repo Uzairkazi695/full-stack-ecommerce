@@ -12,6 +12,7 @@ import { setTotalQty } from "@/store/cartSlice";
 export default function Header() {
   const [isOpen, setIsOpen] = useState(false);
   const [userData, setUserData] = useState("");
+  const [isAdmin, setIsAdmin] = useState("");
 
   const totalQty = useSelector((state) => state.cart.totalQty);
 
@@ -20,15 +21,16 @@ export default function Header() {
   const dispatch = useDispatch();
   const logoutHandler = async () => {
     await authService.logout().then(() => dispatch(logout));
-    localStorage.removeItem("cart")
+    localStorage.removeItem("cart");
   };
 
   useEffect(() => {
     async function getUserData() {
       const res = await authService.getCurrentUser();
+      setIsAdmin(res.labels[0]);
       if (res) dispatch(login(res));
       setUserData(res.$id);
-      dispatch(setTotalQty())
+      dispatch(setTotalQty());
     }
     getUserData();
   }, [dispatch]);
@@ -48,7 +50,7 @@ export default function Header() {
               <Link to={"products"}>Products</Link>
             </li>
 
-            {userData === "admin" && (
+            {isAdmin === "admin" && (
               <li>
                 <Link to={"add-product"}>Add Product</Link>
               </li>

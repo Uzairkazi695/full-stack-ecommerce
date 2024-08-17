@@ -118,7 +118,7 @@ function ProductPage() {
               <div className="text-2xl font-semibold">{product.title}</div>
               <div className="text-lg mt-2">{product.category}</div>
               <div className="text-lg text-[#3c2b20] mt-2">
-                ${product.price}
+              ₹{product.price}
               </div>
               <div className="text-justify mt-2">{product.description}</div>
               <div className="flex items-center mt-5 gap-5">
