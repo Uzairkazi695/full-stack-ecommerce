@@ -47,7 +47,7 @@ export default function Header() {
               <Link to={""}>Home</Link>
             </li>
             <li>
-              <Link >Products</Link>
+              <Link>Products</Link>
             </li>
 
             {isAdmin === "admin" && (
@@ -59,13 +59,10 @@ export default function Header() {
               <button onClick={logoutHandler}>Log out</button>
             ) : (
               <>
-              <Link to={"/login"}>Login</Link>
-              <Link to={"/signup"}>Signup</Link>
+                <Link to={"/login"}>Login</Link>
+                <Link to={"/signup"}>Signup</Link>
               </>
             )}
-            <li>
-              <ModeToggle />{" "}
-            </li>
           </ul>
           <div className="text-3xl relative flex items-center justify-center mt-5 ml-3 h-10 sm:-mr-11">
             <Link to={"cart"}>
@@ -102,13 +99,10 @@ export default function Header() {
               <button onClick={logoutHandler}>Log out</button>
             ) : (
               <>
-              <Link to={"/login"}>Login</Link>
-              <Link to={"/signup"}>Signup</Link>
+                <Link to={"/login"}>Login</Link>
+                <Link to={"/signup"}>Signup</Link>
               </>
             )}
-            <li>
-              <ModeToggle />{" "}
-            </li>
           </ul>
         </div>
       )}

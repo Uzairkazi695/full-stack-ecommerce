@@ -1,11 +1,15 @@
-import ProductCard from '../components/ProductCard'
-import React from 'react'
-import AllProduct from './AllProduct'
+import ProductCard from "../components/ProductCard";
+import React from "react";
+import AllProduct from "./AllProduct";
+import Hero from "@/components/Hero";
 
 function Home() {
   return (
-    <AllProduct />
-  )
+    <>
+      <Hero />
+      <AllProduct />
+    </>
+  );
 }
 
-export default Home
+export default Home;
