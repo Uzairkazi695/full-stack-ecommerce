@@ -47,7 +47,7 @@ export default function Header() {
               <Link to={""}>Home</Link>
             </li>
             <li>
-              <Link to={"products"}>Products</Link>
+              <Link >Products</Link>
             </li>
 
             {isAdmin === "admin" && (
@@ -58,7 +58,10 @@ export default function Header() {
             {authStatus ? (
               <button onClick={logoutHandler}>Log out</button>
             ) : (
+              <>
               <Link to={"/login"}>Login</Link>
+              <Link to={"/signup"}>Signup</Link>
+              </>
             )}
             <li>
               <ModeToggle />{" "}
@@ -90,14 +93,19 @@ export default function Header() {
               <Link to={""}>Home</Link>
             </li>
             <li className="hover:text-[#5d5048]">
-              <Link to={"products"}>Products</Link>
+              <Link>Products</Link>
             </li>
             <li className="hover:text-[#5d5048]">
               <Link to={"add-product"}>Add Product</Link>
             </li>
-            <li className="hover:text-[#5d5048]">
-              <a href="#service">Services</a>
-            </li>
+            {authStatus ? (
+              <button onClick={logoutHandler}>Log out</button>
+            ) : (
+              <>
+              <Link to={"/login"}>Login</Link>
+              <Link to={"/signup"}>Signup</Link>
+              </>
+            )}
             <li>
               <ModeToggle />{" "}
             </li>

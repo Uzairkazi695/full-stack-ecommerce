@@ -63,7 +63,7 @@ export default function ProductForm({ product }) {
           image: file ? file.$id : undefined,
         });
         if (dbPost) {
-          navigate(`/product/${dbPost.$id}`);
+          navigate(`/`);
         } else {
           console.error("Post update failed", dbPost);
         }
@@ -82,7 +82,7 @@ export default function ProductForm({ product }) {
           console.log("createListing", dbPost);
 
           if (dbPost) {
-            navigate(`./product/${dbPost.$id}`);
+            navigate(`/`);
           } else {
             console.error("Post creation failed", dbPost);
           }
