@@ -59,7 +59,7 @@ function Cart() {
   }, [userProductIds]);
 
   const order = () => {
-    fetch("https://paymentserver-vs9diykg.b4a.run/create-checkout-session", {
+    fetch("https://stripepaymentserver-rg1of9u4.b4a.run/create-checkout-session", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
