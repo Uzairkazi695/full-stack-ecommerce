@@ -16,6 +16,7 @@ import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import conf from "../conf/conf";
 import { Client, Account, Functions, Databases } from "appwrite";
+import CheckoutBtn from "@/components/CheckoutBtn";
 
 function Cart() {
   const dispatch = useDispatch();
@@ -57,45 +58,30 @@ function Cart() {
     }
   }, [userProductIds]);
 
-  
-  const client = new Client()
-    .setEndpoint(conf.appwriteUrl)
-    .setProject(conf.appwriteFunctionProjectId);
-  const account = new Account(client);
-  const functions = new Functions(client);
-  const databases = new Databases(client);
-
-
-  async function order() {
-    const execution = await functions.createExecution(
-      conf.appwriteFunctionId,
-      JSON.stringify({
-        failureUrl: window.location.href,
-        successUrl: window.location.href,
+  const order = () => {
+    fetch("http://localhost:3000/create-checkout-session", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        items: [
+          { id: 1, quantity: 3 },
+          { id: 2, quantity: 1 },
+        ],
       }),
-      console.log("here"),
-      
-      false,
-      '/checkout',
-      'POST',
-      console.log("again"),
-      
-      {
-        'Content-Type': 'application/json',
-      }
-    );
-    console.log(execution);
-    
-    const url =
-      execution.responseHeaders.find(
-        (header) => { console.log(header);
-        
-          return header.name === 'location'}
-      ) ?? {};
-      console.log(url);
-      
-    window.location.replace(url.value ?? '/');
-  }
+    })
+      .then((res) => {
+        if (res.ok) return res.json();
+        return res.json().then((json) => Promise.reject(json));
+      })
+      .then(({ url }) => {
+        window.location = url;
+      })
+      .catch((e) => {
+        console.error(e.error);
+      });
+  };
 
   return (
     <div>
@@ -173,9 +159,7 @@ function Cart() {
             Total: ₹{Math.round(cartTotal * 100) / 100}
           </div>
         </div>
-        <Button className="w-32 h-10 rounded-full flex justify-center items-center" onClick={order}>
-          Checkout
-        </Button>
+        <CheckoutBtn products={products} cartItems={cartItems}/>
       </div>
     </div>
   );
