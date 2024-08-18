@@ -1,21 +1,16 @@
-import React, { useEffect, useState } from "react";
 import { Button } from "./ui/button";
-import axios from "axios";
-import { useSelector } from "react-redux";
-import authService from "@/appwrite/auth";
 
 function CheckoutBtn({ products, cartItems }) {
-  
   const order = () => {
     console.log(cartItems);
-    
-    fetch("http://localhost:3000/create-checkout-session", {
+
+    fetch("https://paymentserver-vs9diykg.b4a.run/create-checkout-session", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        cartItems
+        cartItems,
       }),
     })
       .then((res) => {

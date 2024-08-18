@@ -59,7 +59,7 @@ function Cart() {
   }, [userProductIds]);
 
   const order = () => {
-    fetch("http://localhost:3000/create-checkout-session", {
+    fetch("https://paymentserver-vs9diykg.b4a.run/create-checkout-session", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
