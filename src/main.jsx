@@ -12,6 +12,9 @@ import ProductForm from "./components/producForm/ProductForm.jsx";
 import ProductPage from "./pages/ProductPage.jsx";
 import Cart from "./components/Cart.jsx";
 import ProductCart from "./pages/ProductCart.jsx";
+import EditProduct from "./pages/EditProduct.jsx";
+import PaymentSuccess from "./pages/PaymentSuccess.jsx";
+import PaymentFailure from "./pages/PaymentFailure.jsx";
 
 const router = createBrowserRouter([
   {
@@ -41,6 +44,18 @@ const router = createBrowserRouter([
       {
         path: "/cart",
         element: <ProductCart />,
+      },
+      {
+        path: "/edit-product/:slug",
+        element: <EditProduct />,
+      },
+      {
+        path: "/completed",
+        element: <PaymentSuccess />,
+      },
+      {
+        path: "/failed",
+        element: <PaymentFailure/>,
       },
     ],
   },

@@ -64,9 +64,7 @@ export class Service {
     { title, description, image, status, price, qty, category }
   ) {
     try {
-      console.log("updating a listing");
-
-      return await this.databases.updateDocument(
+      const result = await this.databases.updateDocument(
         conf.appwriteDatabaseId,
         conf.appwriteCollectionId,
         slug,
@@ -80,6 +78,8 @@ export class Service {
           category,
         }
       );
+      console.log(result);
+      return result;
     } catch (error) {
       console.log("Appwrite service :: updateListing :: error ", error);
       throw error;
@@ -88,8 +88,6 @@ export class Service {
 
   async deleteListing(slug) {
     try {
-      console.log("deleting a listing");
-
       await this.databases.deleteDocument(
         conf.appwriteDatabaseId,
         conf.appwriteCollectionId,
@@ -145,13 +143,19 @@ export class Service {
   }
 
   async deleteFile(fileId) {
-    console.log("deleting a file");
-
     try {
-      await this.bucket.deleteFile(conf.appwriteBucketId, fileId);
-      return true;
+      const result = await this.bucket.deleteFile(
+        conf.appwriteBucketId,
+        fileId
+      );
+
+      return result;
     } catch (error) {
-      console.log("Appwrite service :: deleteFile :: error ", error);
+      console.error(
+        "Appwrite service :: deleteFile :: error ",
+        error.message,
+        error.response
+      );
       return false;
     }
   }
@@ -197,7 +201,6 @@ export class Service {
           quantity,
         }
       );
-      console.log("update completed");
     } catch (error) {
       console.log("Appwrite service :: updateCartItem :: error ", error);
       throw error;
@@ -213,7 +216,6 @@ export class Service {
       );
 
       return result;
-      console.log("item delete");
     } catch (error) {
       console.log("Appwrite service :: deleteCartItem :: error ", error);
       return false;

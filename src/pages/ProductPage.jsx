@@ -99,12 +99,13 @@ function ProductPage() {
     <main>
       (
       <>
-        <button
+        <Button
           onClick={() => history.back()}
           className="flex justify-center items-center gap-2 ml-5 mt-5 shadow-md w-24 h-10"
         >
           <span>Back</span>
-        </button>
+        </Button>
+
         {product ? (
           <div className="flex flex-col items-center md:flex-row w-full">
             <div className="w-64 flex justify-center mx-10 max-h-96 mt-10 md:w-96">
@@ -114,11 +115,18 @@ function ProductPage() {
                 className="w-full"
               />
             </div>
+            <div>
+              {isAdmin === "admin" && (
+                <Link to={`/edit-product/${product.$id}`}>
+                  <Button>Edit</Button>
+                </Link>
+              )}
+            </div>
             <div className="mt-10 flex flex-col justify-center mx-10 md:ml-20 md:w-1/2 ">
               <div className="text-2xl font-semibold">{product.title}</div>
               <div className="text-lg mt-2">{product.category}</div>
               <div className="text-lg text-[#3c2b20] mt-2">
-              ₹{product.price}
+                ₹{product.price}
               </div>
               <div className="text-justify mt-2">{product.description}</div>
               <div className="flex items-center mt-5 gap-5">

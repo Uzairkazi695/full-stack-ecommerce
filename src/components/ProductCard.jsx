@@ -38,7 +38,6 @@ function ProductCard(prod) {
   useEffect(() => {
     async function getUserData() {
       const res = await authService.getCurrentUser();
-      console.log(res.labels[0]);
       setIsAdmin(res.labels[0]);
 
       if (res) {
@@ -102,7 +101,7 @@ function ProductCard(prod) {
 
   return (
     <>
-      <Card className="relative">
+      <Card className="relative bg-primary-foreground">
         {isAdmin === "admin" && (
           <>
             <AlertDialog>

@@ -37,7 +37,7 @@ export default function Header() {
 
   return (
     <>
-      <header className="w-full h-20 bg-[#FDF8EB]  flex justify-between sticky top-0 shadow-md z-20">
+      <header className="w-full h-20 bg-primary-foreground  flex justify-between sticky top-0 shadow-md z-20">
         <Link to={""} className="flex">
           <span className="absolute h-full ml-10 mr-[5rem] ">LOGO</span>
         </Link>
@@ -87,16 +87,16 @@ export default function Header() {
         >
           <ul className="flex flex-col gap-2">
             <li className="hover:text-[#5d5048]">
-              <Link to={""}>Home</Link>
+              <Link to={"/"}>Home</Link>
             </li>
             <li className="hover:text-[#5d5048]">
               <Link>Products</Link>
             </li>
             <li className="hover:text-[#5d5048]">
-              <Link to={"add-product"}>Add Product</Link>
+              <Link to={"/add-product"}>Add Product</Link>
             </li>
             {authStatus ? (
-              <button onClick={logoutHandler}>Log out</button>
+              <li onClick={logoutHandler}>Log out</li>
             ) : (
               <>
                 <Link to={"/login"}>Login</Link>

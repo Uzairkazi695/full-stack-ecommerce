@@ -22,7 +22,7 @@ export default function ProductForm({ product }) {
     useForm({
       defaultValues: {
         title: product?.title || "",
-        slug: product?.slug || "",
+        slug: product?.$id || "",
         description: product?.description || "",
         price: product?.price || "",
         status: product?.status || "active",
@@ -41,7 +41,6 @@ export default function ProductForm({ product }) {
       if (res) {
         setUserId(res.$id);
       }
-      console.log(res);
     }
     getUserData();
   }, []);
@@ -54,14 +53,16 @@ export default function ProductForm({ product }) {
           ? await service.uploadFile(data.image[0])
           : null;
         console.log("uploading file", file);
-        if (file) {
-          return await service.deleteFile(product.image);
-        }
+        console.log(product.image);
 
         const dbPost = await service.updateListing(product.$id, {
           ...data,
           image: file ? file.$id : undefined,
         });
+        console.log(dbPost);
+
+        if (file) await service.deleteFile(product.image);
+
         if (dbPost) {
           navigate(`/`);
         } else {
@@ -189,9 +190,9 @@ export default function ProductForm({ product }) {
         {product && (
           <div className="w-full mb-4">
             <img
-              src={service.getFilePreview(post.image)}
+              src={service.getFilePreview(product.image)}
               alt={product.title}
-              className="rounded-lg"
+              className="rounded-lg h-96"
             />
           </div>
         )}

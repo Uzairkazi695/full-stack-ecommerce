@@ -10,7 +10,6 @@ const conf = {
     import.meta.env.VITE_APPWRITE_CUSTOMER_COLLECTION_ID
   ),
   appwriteBucketId: String(import.meta.env.VITE_APPWRITE_BUCKET_ID),
-  appwriteBucketId: String(import.meta.env.VITE_APPWRITE_BUCKET_ID),
   appwriteFunctionId: String(import.meta.env.VITE_APPWRITE_FUNCTION_ID),
   appwriteFunctionProjectId: String(import.meta.env.VITE_APPWRITE_FUNCTION_PROJECT_ID),
   appwriteApiKey: String(import.meta.env.VITE_APPWRITE_API_KEY),
