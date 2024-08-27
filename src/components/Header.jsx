@@ -8,6 +8,7 @@ import service from "../appwrite/config";
 import authService from "../appwrite/auth";
 import { login, logout } from "../store/authSlice";
 import { setTotalQty } from "@/store/cartSlice";
+import Logo from "../assets/logo.png";
 
 export default function Header() {
   const [isOpen, setIsOpen] = useState(false);
@@ -38,8 +39,8 @@ export default function Header() {
   return (
     <>
       <header className="w-full h-20 bg-primary-foreground  flex justify-between sticky top-0 shadow-md z-20">
-        <Link to={""} className="flex">
-          <span className="absolute h-full ml-10 mr-[5rem] ">LOGO</span>
+        <Link to={"/"} className="flex bg-primary-foreground">
+          <img src={Logo} className="absolute h-full ml-10 mr-[5rem] bg-primary-foreground" />
         </Link>
         <div className="text-[#5d5048] text-lg font-medium flex md:mr-28">
           <ul className="hidden md:flex gap-7 items-center ">

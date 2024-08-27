@@ -97,7 +97,6 @@ function ProductPage() {
 
   return (
     <main>
-      (
       <>
         <Button
           onClick={() => history.back()}
@@ -114,13 +113,13 @@ function ProductPage() {
                 alt={product.title}
                 className="w-full"
               />
-            </div>
-            <div>
-              {isAdmin === "admin" && (
-                <Link to={`/edit-product/${product.$id}`}>
-                  <Button>Edit</Button>
-                </Link>
-              )}
+              <div>
+                {isAdmin === "admin" && (
+                  <Link to={`/edit-product/${product.$id}`}>
+                    <Button>Edit</Button>
+                  </Link>
+                )}
+              </div>
             </div>
             <div className="mt-10 flex flex-col justify-center mx-10 md:ml-20 md:w-1/2 ">
               <div className="text-2xl font-semibold">{product.title}</div>
@@ -153,9 +152,9 @@ function ProductPage() {
                 </button>
               </div>
               {cart.some((prod) => prod.productId === product.$id) ? (
-                <Button onClick={removeCartHandler}>Remove from cart</Button>
+                <Button onClick={removeCartHandler} className="my-5">Remove from cart</Button>
               ) : (
-                <Button onClick={cartHandler}>Add to cart</Button>
+                <Button onClick={cartHandler} className="my-5">Add to cart</Button>
               )}
             </div>
           </div>
@@ -163,7 +162,6 @@ function ProductPage() {
           <h2>Loading.....</h2>
         )}
       </>
-      )
     </main>
   );
 }
