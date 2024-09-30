@@ -91,6 +91,10 @@ export default function Login() {
             </Button>
           </CardFooter>
         </form>
+        <CardContent>
+          <div>Demo Account: demo@gmail.com</div>
+          <div>Demo Account Password: 12345678</div>
+        </CardContent>
       </Card>
     </div>
   );
