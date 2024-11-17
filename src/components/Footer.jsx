@@ -1,60 +1,116 @@
-import React from 'react'
-import { FaHome, FaPhoneAlt, FaFacebook, FaTwitter, FaInstagram, FaLinkedin } from "react-icons/fa";
+import React from "react";
+import {
+  FaHome,
+  FaPhoneAlt,
+  FaFacebook,
+  FaTwitter,
+  FaInstagram,
+  FaLinkedin,
+} from "react-icons/fa";
 import { IoIosMail } from "react-icons/io";
+
+const FooterLink = ({ href, children }) => (
+  <a
+    href={href}
+    className="transition-colors duration-200 hover:text-primary-foreground/80"
+  >
+    {children}
+  </a>
+);
+
+const FooterSection = ({ title, children }) => (
+  <div className="space-y-4">
+    <h2 className="text-xl font-semibold tracking-wide">{title}</h2>
+    {children}
+  </div>
+);
 
 export default function Footer() {
   return (
-    <>
-        <div className='bg-primary text-white grid gap-3 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5'>
-            <div className='ml-4'>
-                <h2 className='text-xl mt-2'>Contact Us</h2>
-                <div className='mt-2 flex'>
-                    <span className='mt-1 mr-2'><FaHome /></span>
-                    Gujarat, India
-                </div>
-                <div className='mt-2 flex'>
-                    <span className='mt-1 mr-2'><FaPhoneAlt /></span>
-                    <a href="tel: +91-123-965-4856">+91 1239654856</a>
-                </div>
-                <div className='mt-2 flex'>
-                    <span className='mt-1 mr-2'><IoIosMail /></span>
-                    <a href="mailto:contact@trendmart.com">contact@trendmart.com</a>
-                </div>
+    <footer className="bg-gradient-to-br from-primary to-primary/90 text-white">
+      <div className="max-w-7xl mx-auto px-4 py-12">
+        <div className="grid gap-8 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5">
+          <FooterSection title="Contact Us">
+            <div className="space-y-3">
+              <div className="flex items-center space-x-3 group">
+                <FaHome className="text-lg group-hover:text-primary-foreground/80" />
+                <span>Gujarat, India</span>
+              </div>
+              <div className="flex items-center space-x-3 group">
+                <FaPhoneAlt className="text-lg group-hover:text-primary-foreground/80" />
+                <FooterLink>
+                  +91 1239654856
+                </FooterLink>
+              </div>
+              <div className="flex items-center space-x-3 group">
+                <IoIosMail className="text-lg group-hover:text-primary-foreground/80" />
+                <FooterLink>
+                  contact@cartify.com
+                </FooterLink>
+              </div>
             </div>
-            <div className='ml-4'>
-                <h2 className='text-xl mt-2'>Get Help</h2>
-                <div className='mt-2'>FAQs</div>
-                <div className='mt-2'>Shipping</div>
-                <div className='mt-2'>Returns</div>
-                <div className='mt-2'>Terms and Conditions</div>
+          </FooterSection>
+
+          <FooterSection title="Get Help">
+            <ul className="space-y-2">
+              {["FAQs", "Shipping", "Returns", "Terms and Conditions"].map(
+                (item) => (
+                  <li key={item}>
+                    <FooterLink href="#">{item}</FooterLink>
+                  </li>
+                )
+              )}
+            </ul>
+          </FooterSection>
+
+          <FooterSection title="Our Stores">
+            <ul className="space-y-2">
+              {["India", "USA", "Japan", "Dubai"].map((location) => (
+                <li key={location}>
+                  <FooterLink>{location}</FooterLink>
+                </li>
+              ))}
+            </ul>
+          </FooterSection>
+
+          <FooterSection title="Follow Us">
+            <div className="flex space-x-4">
+              {[FaFacebook, FaInstagram, FaTwitter, FaLinkedin].map(
+                (Icon, index) => (
+                  <a
+                    key={index}
+                    href="#"
+                    className="text-2xl hover:text-primary-foreground/80 transition-colors duration-200"
+                  >
+                    <Icon />
+                  </a>
+                )
+              )}
             </div>
-            <div className='ml-4'>
-                <h2 className='text-xl mt-2'>Our Stores</h2>
-                <div className='mt-2'>India</div>
-                <div className='mt-2'>USA</div>
-                <div className='mt-2'>Japan</div>
-                <div className='mt-2'>Dubai</div>
+          </FooterSection>
+
+          <FooterSection title="Newsletter">
+            <div className="space-y-3">
+              <input
+                type="email"
+                placeholder="Your Email Here"
+                className="w-full px-4 py-2 rounded bg-white/10 border border-white/20 focus:outline-none focus:border-white/40 transition-colors duration-200"
+              />
+              <button className="w-full px-4 py-2 bg-white text-primary font-semibold rounded hover:bg-white/90 transition-colors duration-200">
+                Subscribe
+              </button>
             </div>
-            <div className='ml-4'>
-                <h2 className='text-xl my-2'>Follow Us</h2>
-                <div className='flex gap-5 text-xl '>
-                    <FaFacebook />
-                    <FaInstagram />
-                    <FaTwitter />
-                    <FaLinkedin />
-                </div>
-            </div>
-            <div className='ml-4'>
-                <h2 className='text-xl my-2'>Newsletter</h2>
-                <div>
-                    <input type="text" placeholder='Your Email Here'/><br />
-                    <button>Subscribe</button>
-                </div>
-            </div>
+          </FooterSection>
         </div>
-        <div className='h-20 bg-primary-foreground text-pretty text-xl flex justify-center items-center'>
-            <p>Copyright © Trend Mart 2024. All rights reserved.</p>
+      </div>
+
+      <div className="border-t border-white/10">
+        <div className="max-w-7xl mx-auto px-4 py-6">
+          <p className="text-center text-sm md:text-base">
+            Copyright © Cartify {new Date().getFullYear()}. All rights reserved.
+          </p>
         </div>
-    </>
-  )
+      </div>
+    </footer>
+  );
 }
